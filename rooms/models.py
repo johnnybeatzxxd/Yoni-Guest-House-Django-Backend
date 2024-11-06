@@ -8,7 +8,7 @@ class Rooms(models.Model):
     images = models.JSONField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     amenities = models.JSONField()
-    available_today = models.BooleanField(default=False)
+    available_today = models.BooleanField(default=True)
     
     class Meta:
         verbose_name = "Room"
@@ -42,8 +42,8 @@ class Reservation(models.Model):
     guests = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=[("confirmed", "Confirmed"), ("pending", "Pending"), ("cancelled", "Cancelled")], default="pending")
-    name = models.CharField(max_length=100)
-    phone_number = models.CharField(max_length=15)
+    guest_name = models.CharField(max_length=100)
+    guest_phone = models.CharField(max_length=15)
 
     def __str__(self):
         return f"Reservation for Room {self.room.room_num}"
