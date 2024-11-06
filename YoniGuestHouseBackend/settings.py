@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-62+=^l39etr+v0mwrutn05ymoj_t6b#1-&z0pw21o+gx^*$+qp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["36f5-102-213-69-7.ngrok-free.app","127.0.0.1"]
+ALLOWED_HOSTS = ["skilled-legal-macaw.ngrok-free.app","127.0.0.1"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5000",
@@ -34,7 +34,9 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5000",
     "http://localhost:3000",
+    "https://skilled-legal-macaw.ngrok-free.app"
 ]
+
 
 CORS_ALLOW_HEADERS = (
     "accept",
@@ -64,7 +66,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
