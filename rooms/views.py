@@ -36,10 +36,12 @@ def book_reservation(request):
     
     check_in_date_str = request.data.get("from")
     check_out_date_str = request.data.get("to")
-    room_nums = request.data.get("room_num")
-    name = request.data.get("guest_name")
-    phone_number = request.data.get("phone_number")
-    guest_number = request.data.get("guest_num")
+    room_nums = request.data.get("rooms")
+    guest_email = request.data.get("email")
+    guest_number = request.data.get("guestNumber")
+    guest_first_name = request.data.get("firstName")
+    guest_last_name = request.data.get("lastName")
+    guest_phone = request.data.get("phoneNumber")
 
     try:
         check_in_date = datetime.strptime(check_in_date_str, "%Y-%m-%d").date()
@@ -80,8 +82,10 @@ def book_reservation(request):
             check_in_date=check_in_date,
             check_out_date=check_out_date,
             status="confirmed",
-            guest_name=name,
-            guest_phone=phone_number,
+            guest_email=guest_email, 
+            guest_first_name=guest_first_name,
+            guest_last_name=guest_last_name,
+            guest_phone=guest_phone,
             guests=guest_number
         )
 
