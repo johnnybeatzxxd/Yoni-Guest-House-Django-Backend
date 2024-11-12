@@ -41,12 +41,14 @@ class Reservation(models.Model):
     room = models.ForeignKey(Rooms, on_delete=models.CASCADE, related_name="reservations")
     check_in_date = models.DateField()
     check_out_date = models.DateField()
-    guests = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=[("confirmed", "Confirmed"), ("pending", "Pending"), ("cancelled", "Cancelled")], default="pending")
     guest_email = models.EmailField(max_length=50,default=None)
     guest_first_name = models.CharField(max_length=100,default=None)
     guest_last_name = models.CharField(max_length=100,default=None)
+    adult_number = models.IntegerField(default=0)
+    children_number = models.IntegerField(default=0)
+    special_request = models.TextField(null=True,blank=True)
     guest_phone = models.CharField(max_length=15, validators=[RegexValidator(regex=r'^\+?\d{10,15}$', message='Phone number must be entered in the format: "0912345678". Up to 15 digits allowed.')])
     def __str__(self):
         return f"Reservation for Room {self.room.room_num}"

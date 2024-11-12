@@ -38,7 +38,9 @@ def book_reservation(request):
     check_out_date_str = request.data.get("to")
     room_nums = request.data.get("rooms")
     guest_email = request.data.get("email")
-    guest_number = request.data.get("guestNumber")
+    special_request = request.data.get("specialRequest")
+    adult_number = request.data.get("adultNumber")
+    children_number = request.data.get("childrenNumber")
     guest_first_name = request.data.get("firstName")
     guest_last_name = request.data.get("lastName")
     guest_phone = request.data.get("phoneNumber")
@@ -75,18 +77,21 @@ def book_reservation(request):
             "error": "Some rooms are not available for the selected dates.",
             "unavailable_rooms": unavailable_rooms
         }, status=400)
-
+    
     for room in available_rooms:
         reservation = Reservation.objects.create(
             room=room,
             check_in_date=check_in_date,
             check_out_date=check_out_date,
-            status="confirmed",
+            status="pending",
             guest_email=guest_email, 
             guest_first_name=guest_first_name,
             guest_last_name=guest_last_name,
             guest_phone=guest_phone,
-            guests=guest_number
+            special_request=special_request,
+            adult_number=adult_number,
+            children_number=children_number
+
         )
 
         if check_in_date == today:
