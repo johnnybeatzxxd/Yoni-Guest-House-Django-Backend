@@ -50,5 +50,6 @@ class Reservation(models.Model):
     children_number = models.IntegerField(default=0)
     special_request = models.TextField(null=True,blank=True)
     guest_phone = models.CharField(max_length=15, validators=[RegexValidator(regex=r'^\+?\d{10,15}$', message='Phone number must be entered in the format: "0912345678". Up to 15 digits allowed.')])
+    tx_ref = models.CharField(max_length=100,default=None)
     def __str__(self):
         return f"Reservation for Room {self.room.room_num}"
