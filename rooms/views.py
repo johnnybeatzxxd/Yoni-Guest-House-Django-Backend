@@ -47,8 +47,6 @@ def book_reservation(request):
     room_nums = request.data.get("rooms")
     guest_email = request.data.get("email")
     special_request = request.data.get("specialRequest")
-    adult_number = request.data.get("adultNumber")
-    children_number = request.data.get("childrenNumber")
     guest_first_name = request.data.get("firstName")
     guest_last_name = request.data.get("lastName")
     guest_phone = request.data.get("phoneNumber")
@@ -61,6 +59,7 @@ def book_reservation(request):
 
 
     today = date.today()
+    print(today)
     if check_in_date < today:
         return JsonResponse({"error": "Check-in date cannot be in the past."}, status=400)
 
@@ -99,10 +98,7 @@ def book_reservation(request):
             guest_last_name=guest_last_name,
             guest_phone=guest_phone,
             special_request=special_request,
-            adult_number=adult_number,
-            children_number=children_number,
             tx_ref = tx_ref
-
         )
         amount += int(room.price)
         
@@ -154,12 +150,3 @@ def payment_received(request):
     else:
         return JsonResponse({"error": "Invalid signature"}, status=400)
 
-def approve_payment(request):
-    """"
-        handles payment approval of room booking
-        returns: status code 200 if success, otherwise 400
-    """
-    # check if room is availabe from reservation
-    print(request.body)
-
-    return HttpResponse(status=200)

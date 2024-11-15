@@ -8,10 +8,11 @@ load_dotenv()
 
 
 url = "https://api.chapa.co/v1/transaction/initialize"
-chapa_key = os.getenv("CHAPA_API_SECRET_KEY")
-
 
 def initiate_payment(first_name,last_name,email,phone_number,amount,description,tx_ref):
+    chapa_key = os.getenv("ABC")
+
+    print("this is ",chapa_key)
     payload = {
         "amount": amount,
         "currency": "ETB",
