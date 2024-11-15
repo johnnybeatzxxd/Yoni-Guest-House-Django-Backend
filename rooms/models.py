@@ -24,7 +24,7 @@ class Rooms(models.Model):
         return self.objects.exclude(
             reservations__check_in_date__lt=check_out_date,
             reservations__check_out_date__gt=check_in_date,
-            reservations__status="confirmed",
+            reservations__status__in=["confirmed", "pending"]
         )
 
 
@@ -46,8 +46,6 @@ class Reservation(models.Model):
     guest_email = models.EmailField(max_length=50,default=None)
     guest_first_name = models.CharField(max_length=100,default=None)
     guest_last_name = models.CharField(max_length=100,default=None)
-    adult_number = models.IntegerField(default=0)
-    children_number = models.IntegerField(default=0)
     special_request = models.TextField(null=True,blank=True)
     guest_phone = models.CharField(max_length=15, validators=[RegexValidator(regex=r'^\+?\d{10,15}$', message='Phone number must be entered in the format: "0912345678". Up to 15 digits allowed.')])
     tx_ref = models.CharField(max_length=100,default=None)
