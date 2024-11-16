@@ -9,7 +9,7 @@ class Rooms(models.Model):
     images = models.JSONField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     amenities = models.JSONField()
-    available_today = models.BooleanField(default=True)
+    is_ready = models.BooleanField(default=True)
     shared_shower = models.BooleanField(default=False)
     
     class Meta:
@@ -43,11 +43,41 @@ class Reservation(models.Model):
     check_out_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=[("confirmed", "Confirmed"), ("pending", "Pending"), ("cancelled", "Cancelled")], default="pending")
-    guest_email = models.EmailField(max_length=50,default=None)
+    guest_email = models.EmailField(max_length=50,default=None,blank=True, null=True)
     guest_first_name = models.CharField(max_length=100,default=None)
-    guest_last_name = models.CharField(max_length=100,default=None)
+    guest_last_name = models.CharField(max_length=100,default=None,blank=True, null=True)
     special_request = models.TextField(null=True,blank=True)
     guest_phone = models.CharField(max_length=15, validators=[RegexValidator(regex=r'^\+?\d{10,15}$', message='Phone number must be entered in the format: "0912345678". Up to 15 digits allowed.')])
-    tx_ref = models.CharField(max_length=100,default=None)
+    tx_ref = models.CharField(max_length=100,default=None,blank=True, null=True)
     def __str__(self):
         return f"Reservation for Room {self.room.room_num}"
+
+class TransactionLogs(models.Model):
+    rooms = models.ManyToManyField(Rooms, related_name="transaction_logs")
+    without_conflict=models.BooleanField(default=True)
+    event = models.CharField(max_length=50, choices=[("charge.success", "Charge Success")], default="charge.success")
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    mobile = models.CharField(max_length=15, blank=True, null=True)
+    currency = models.CharField(max_length=10, default="ETB")
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    charge = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=[("success", "Success"), ("failed", "Failed")], default="success")
+    mode = models.CharField(max_length=10, choices=[("live", "Live"), ("test", "Test")], default="live")
+    reference = models.CharField(max_length=50, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    type = models.CharField(max_length=10, choices=[("API", "API"), ("Manual", "Manual")], default="API")
+    tx_ref = models.CharField(max_length=50, blank=True, null=True)
+    payment_method = models.CharField(max_length=50, blank=True, null=True)
+    customization = models.JSONField(blank=True, null=True)  # Stores title, description, and logo
+    meta = models.JSONField(blank=True, null=True)
+
+    def __str__(self):
+        room_numbers = ", ".join([str(room.room_num) for room in self.rooms.all()])
+        return f"Transaction for Rooms: {room_numbers} - {self.status}"
+
+    class Meta:
+        verbose_name = "Transaction log"
+        verbose_name_plural = "Transaction logs"

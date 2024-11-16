@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.http.response import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
-from .models import Rooms,Reservation
+from .models import Rooms,Reservation,TransactionLogs
 from .serializers import RoomSerializer
 from rest_framework.decorators import api_view
+from django.utils.dateparse import parse_datetime
 from datetime import datetime, date
 from .payment import initiate_payment
 import uuid
-from Crypto.Hash import HMAC, SHA256
+from .verify_webhook import verify_webhook
+
 import os
 from dotenv import load_dotenv
 import json
@@ -34,7 +36,7 @@ def available_rooms(request):
         return JsonResponse({"error": "check out date must be after check-in date."}, status=400)
 
     available_rooms = Rooms.available_rooms(check_in_date, check_out_date).filter(type=room_type)
-    available_rooms_data = [{"room_number": room.room_num, "type": room.type, "price_per_night": room.price,"discription":room.desc,"images":room.images,"aminities":room.amenities,"available_today":room.available_today} for room in available_rooms]
+    available_rooms_data = [{"room_number": room.room_num, "type": room.type, "price_per_night": room.price,"discription":room.desc,"images":room.images,"aminities":room.amenities,"available_today":room.is_ready} for room in available_rooms]
 
     print(check_in_date,check_out_date)
     return JsonResponse({"rooms":available_rooms_data}, status=200)
@@ -102,9 +104,9 @@ def book_reservation(request):
         )
         amount += int(room.price)
         
-        if check_in_date == today:
-            room.available_today = False
-            room.save()
+        # if check_in_date == today:
+        #     room.available_today = False
+        #     room.save()
 
     total_stay_days = (check_out_date - check_in_date).days
     amount = amount * total_stay_days 
@@ -120,29 +122,48 @@ def book_reservation(request):
 
 @api_view(['POST', 'GET'])
 def payment_received(request):
-
-    secret = os.getenv("CHAPA_SECRET")
-    chapa_signature = request.headers.get('Chapa-Signature')
-    x_chapa_signature = request.headers.get('x-chapa-signature')
     
-    if not chapa_signature or not x_chapa_signature:
-        return JsonResponse({"error": "Missing signature headers"}, status=400)
-    
-    # Verify Chapa-Signature
-    chapa_hash = HMAC.new(secret.encode(), secret.encode(), digestmod=SHA256).hexdigest()
-    
-    # Verify x-chapa-signature 
-    payload_hash = HMAC.new(secret.encode(), request.body, digestmod=SHA256).hexdigest()
-    
+    is_request_valid = verify_webhook(request)
     # Validate both signatures
-    if chapa_hash == chapa_signature and payload_hash == x_chapa_signature:
+    if is_request_valid:
         event = request.data.get("event")
-        tx_ref = request.data.get("tx_ref")
+
         if event == "charge.success":
-            print("updating the db")
-            reserved_room = Reservation.objects.get(tx_ref=tx_ref)
-            reserved_room.status = "confirmed"
-            reserved_room.save()
+            
+            tx_ref = request.data.get("tx_ref")
+            reserved_rooms = Reservation.objects.filter(tx_ref=tx_ref)
+            without_conflict = True
+
+            for reserved_room in reserved_rooms:
+                room = reserved_room.room
+                reserved_room.status = "confirmed"
+                is_available = room.is_available_for_dates(reserved_room.check_in_date,reserved_room.check_out_date)
+                if not is_available:
+                    without_conflict = False
+                reserved_room.save()
+            
+            log = TransactionLogs.objects.create(
+                event=request.data.get("event"),
+                without_conflict=without_conflict,
+                type=request.data.get("type"),
+                status=request.data.get("status"),
+                first_name=request.data.get("first_name"),
+                last_name=request.data.get("last_name"),
+                email=request.data.get("email"),
+                mobile=request.data.get("mobile"),
+                currency=request.data.get("currency"),
+                amount=request.data.get("amount"),
+                charge=request.data.get("charge"),
+                reference=request.data.get("reference"),
+                tx_ref=request.data.get("tx_ref"),
+                payment_method=request.data.get("payment_method"),
+                customization=request.data.get("customization"),  
+                meta=request.data.get("meta"),  
+                created_at=parse_datetime(request.data.get("created_at")),  
+                updated_at=parse_datetime(request.data.get("updated_at")),  
+            )
+            rooms = [reservation.room for reservation in reserved_rooms]
+            log.rooms.set(rooms)
 
         print("Event validated and received:", event)
         
