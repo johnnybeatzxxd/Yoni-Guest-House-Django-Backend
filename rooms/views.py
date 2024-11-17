@@ -103,10 +103,6 @@ def book_reservation(request):
             tx_ref = tx_ref
         )
         amount += int(room.price)
-        
-        # if check_in_date == today:
-        #     room.available_today = False
-        #     room.save()
 
     total_stay_days = (check_out_date - check_in_date).days
     amount = amount * total_stay_days 
