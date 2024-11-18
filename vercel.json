@@ -18,7 +18,7 @@
       },
       {
         "src": "/(.*)",
-        "dest": "server/wsgi.py"
+        "dest": "YoniGuestHouseBackend/wsgi.py"
       }
     ]
   }
