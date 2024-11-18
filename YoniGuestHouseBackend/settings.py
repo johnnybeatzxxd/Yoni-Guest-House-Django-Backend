@@ -30,11 +30,16 @@ ALLOWED_HOSTS = ["skilled-legal-macaw.ngrok-free.app","127.0.0.1"]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5000",
     "http://localhost:3000",
+    "https://sensibly-touched-orca.ngrok-free.app",
+    "https://skilled-legal-macaw.ngrok-free.app",
+    "https://yoni-guest-house.vercel.app",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5000",
     "http://localhost:3000",
-    "https://skilled-legal-macaw.ngrok-free.app"
+    "https://skilled-legal-macaw.ngrok-free.app",
+    "https://sensibly-touched-orca.ngrok-free.app",
+    "https://yoni-guest-house.vercel.app",
 ]
 
 

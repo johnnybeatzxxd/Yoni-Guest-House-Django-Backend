@@ -10,7 +10,7 @@ load_dotenv()
 url = "https://api.chapa.co/v1/transaction/initialize"
 
 def initiate_payment(first_name,last_name,email,phone_number,amount,description,tx_ref):
-    chapa_key = os.getenv("ABC")
+    chapa_key = os.getenv("CHAPA_TEST_API")
 
     print("this is ",chapa_key)
     payload = {
@@ -43,3 +43,5 @@ def initiate_payment(first_name,last_name,email,phone_number,amount,description,
     else:
         print(f"Error: {response.status_code} - {response.text}")
         return None
+
+
