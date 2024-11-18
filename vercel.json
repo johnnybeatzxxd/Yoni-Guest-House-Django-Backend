@@ -16,6 +16,6 @@
         "src": "/(.*)",
         "dest": "YoniGuestHouseBackend/wsgi.py"
       }
-    ]
+    ],
+    "outputDirectory": "staticfiles"
   }
-  
