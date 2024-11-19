@@ -15,25 +15,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-62+=^l39etr+v0mwrutn05ymoj_t6b#1-&z0pw21o+gx^*$+qp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [".vercel.app","127.0.0.1"]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5000",
-    "http://localhost:3000",
-    "https://sensibly-touched-orca.ngrok-free.app",
-    "https://skilled-legal-macaw.ngrok-free.app",
-    "https://yoni-guest-house.vercel.app",
     "https://yoniguesthouse.top",
 
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5000",
-    "http://localhost:3000",
-    "https://skilled-legal-macaw.ngrok-free.app",
-    "https://sensibly-touched-orca.ngrok-free.app",
-    "https://yoni-guest-house.vercel.app",
     "https://yoniguesthouse.top",
 ]
 
