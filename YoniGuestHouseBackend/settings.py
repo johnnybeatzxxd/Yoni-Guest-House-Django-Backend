@@ -19,6 +19,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = [".vercel.app","127.0.0.1"]
 
+CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOWED_ORIGINS = [
     "https://yoniguesthouse.top",
 
@@ -27,11 +29,14 @@ CSRF_TRUSTED_ORIGINS = [
     "https://yoniguesthouse.top",
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+
 
 CORS_ALLOW_HEADERS = [
     'content-type', 'authorization', 'x-csrftoken', 'accept', 'origin'
 ]
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+
 
 CORS_PREFLIGHT_MAX_AGE = 86400 
 # Application definition
