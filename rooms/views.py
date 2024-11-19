@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http.response import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 from .models import Rooms,Reservation,TransactionLogs
 from .serializers import RoomSerializer
 from rest_framework.decorators import api_view
@@ -18,6 +19,7 @@ load_dotenv()
 
 # Create your views here.
 @api_view(['POST'])
+@csrf_exempt
 def available_rooms(request):
     print(request.data)
 
@@ -42,6 +44,7 @@ def available_rooms(request):
     return JsonResponse({"rooms":available_rooms_data}, status=200)
 
 @api_view(['POST'])
+@csrf_exempt
 def book_reservation(request):
     
     check_in_date_str = request.data.get("from")
@@ -117,6 +120,7 @@ def book_reservation(request):
 
 
 @api_view(['POST', 'GET'])
+@csrf_exempt
 def payment_received(request):
     
     is_request_valid = verify_webhook(request)
