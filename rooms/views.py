@@ -1,6 +1,5 @@
 from django.shortcuts import render
-from django.http.response import JsonResponse, HttpResponseRedirect, HttpResponse
-from django.shortcuts import get_object_or_404
+from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Rooms,Reservation,TransactionLogs
 from .serializers import RoomSerializer
@@ -18,8 +17,9 @@ import json
 load_dotenv()
 
 # Create your views here.
-@csrf_exempt
+
 @api_view(['POST'])
+@csrf_exempt
 def available_rooms(request):
     print(request.data)
 

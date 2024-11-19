@@ -22,11 +22,14 @@ ALLOWED_HOSTS = [".vercel.app","127.0.0.1"]
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
+
     "https://www.yoniguesthouse.top",
 
 ]
 CSRF_TRUSTED_ORIGINS = [
+
     "https://www.yoniguesthouse.top",
+    "http://127.0.0.1:8000"
 ]
 
 
@@ -53,6 +56,7 @@ INSTALLED_APPS = [
     'rooms',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -60,7 +64,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
