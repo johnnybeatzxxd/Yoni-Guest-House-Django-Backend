@@ -27,15 +27,13 @@ CSRF_TRUSTED_ORIGINS = [
     "https://yoniguesthouse.top",
 ]
 
+CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_HEADERS = (
-    "accept",
-    "authorization",
-    "content-type",
-    "user-agent",
-    "x-csrftoken",
-    "x-requested-with",
-)
+CORS_ALLOW_HEADERS = [
+    'content-type', 'authorization', 'x-csrftoken', 'accept', 'origin'
+]
+
+CORS_PREFLIGHT_MAX_AGE = 86400 
 # Application definition
 
 INSTALLED_APPS = [
