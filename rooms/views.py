@@ -18,8 +18,8 @@ import json
 load_dotenv()
 
 # Create your views here.
-@api_view(['POST'])
 @csrf_exempt
+@api_view(['POST'])
 def available_rooms(request):
     print(request.data)
 
@@ -43,8 +43,8 @@ def available_rooms(request):
     print(check_in_date,check_out_date)
     return JsonResponse({"rooms":available_rooms_data}, status=200)
 
-@api_view(['POST'])
 @csrf_exempt
+@api_view(['POST'])
 def book_reservation(request):
     
     check_in_date_str = request.data.get("from")
@@ -118,9 +118,8 @@ def book_reservation(request):
         "payment_url": payment_url
     }, status=200)
 
-
-@api_view(['POST', 'GET'])
 @csrf_exempt
+@api_view(['POST', 'GET'])
 def payment_received(request):
     
     is_request_valid = verify_webhook(request)
