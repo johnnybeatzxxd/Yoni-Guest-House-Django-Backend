@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 #SECRET_KEY = 'django-insecure-62+=^l39etr+v0mwrutn05ymoj_t6b#1-&z0pw21o+gx^*$+qp'
 if not SECRET_KEY:
-    raise ValueError("The SECRET_KEY environment variable is not set!")
+    raise ValueError("The DJANGO_SECRET_KEY environment variable is not set!")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -155,6 +155,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+if not DEBUG:
+    STATIC_URL = "https://yoni-guest-house-django-backend.vercel.app/static/"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
