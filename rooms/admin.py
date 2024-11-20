@@ -53,22 +53,21 @@ class ReservationForm(forms.ModelForm):
             if check_in_date < today:
                 self.add_error('check_in_date', "Check-in date must be earlier than check-out date.")
                 is_form_valid = False
-            
-
 
             if check_in_date >= check_out_date:
                 self.add_error('check_out_date', "Check-out date must be later than check-in date.")
                 is_form_valid = False
 
             if status == "confirmed":
-                if room and not room.is_available_for_dates(check_in_date, check_out_date):
-                    raise forms.ValidationError(
-                        f"The room {room.room_num} is not available from {check_in_date} to {check_out_date}."
-                    )
+                if self.instance.pk is None:
+                    if room and not room.is_available_for_dates(check_in_date, check_out_date):
+                        raise forms.ValidationError(
+                            f"The room {room.room_num} is not available from {check_in_date} to {check_out_date}."
+                        )
+        
         if self.instance.pk is None:
             action = "Creating"
         else:
-        
             action = "Editing"
         
         if self.instance.pk is None and status != "confirmed":
@@ -78,12 +77,24 @@ class ReservationForm(forms.ModelForm):
         if not self.instance.pk is None and status == "pending":
             self.add_error('status', "Reservation must be confirmed or cancelled.")
             is_form_valid = False
-
+        
+        # edit mode    
+        if self.instance.pk is not None: 
+            original_check_in_date = self.instance.check_in_date
+            original_check_out_date = self.instance.check_out_date
+            # check if the date is changed if changed check for the room availability
+            
+            if check_in_date != original_check_in_date or check_out_date != original_check_out_date:
+                print("checking the availability")
+                if room and not room.is_available_for_dates(check_in_date, check_out_date, exclude_reservation=self.instance):
+                    raise forms.ValidationError(
+                        f"The room {room.room_num} is not available from {check_in_date} to {check_out_date}."
+                    )
+                
         if not is_form_valid:
             raise forms.ValidationError("The form is invalid.")
             
         return cleaned_data
-
 
 class ReservationAdmin(admin.ModelAdmin):
     form = ReservationForm

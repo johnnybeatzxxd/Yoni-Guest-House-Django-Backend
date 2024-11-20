@@ -28,13 +28,17 @@ class Rooms(models.Model):
         )
 
 
-    def is_available_for_dates(self, start_date, end_date):
+    def is_available_for_dates(self, start_date, end_date, exclude_reservation=None):
        
         overlapping_reservations = self.reservations.filter(
             check_in_date__lt=end_date,      
             check_out_date__gt=start_date,   
             status="confirmed"              
         )
+        
+        if exclude_reservation:
+            overlapping_reservations = overlapping_reservations.exclude(pk=exclude_reservation.pk)
+        
         return not overlapping_reservations.exists()
     
 class Reservation(models.Model):
