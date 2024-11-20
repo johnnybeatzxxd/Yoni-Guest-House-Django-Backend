@@ -25,7 +25,7 @@ class Rooms(models.Model):
             reservations__check_in_date__lt=check_out_date,
             reservations__check_out_date__gt=check_in_date,
             reservations__status="confirmed"
-        )
+        ).order_by('id')
 
 
     def is_available_for_dates(self, start_date, end_date, exclude_reservation=None):

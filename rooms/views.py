@@ -37,7 +37,7 @@ def available_rooms(request):
     if check_out_date <= check_in_date:
         return JsonResponse({"error": "check out date must be after check-in date."}, status=400)
 
-    available_rooms = Rooms.available_rooms(check_in_date, check_out_date).filter(type=room_type)
+    available_rooms = Rooms.available_rooms(check_in_date, check_out_date).filter(type=room_type,is_ready=True)
     available_rooms_data = [{"room_number": room.room_num, "type": room.type, "price_per_night": room.price,"discription":room.desc,"images":room.images,"aminities":room.amenities,"available_today":room.is_ready} for room in available_rooms]
 
     print(check_in_date,check_out_date)
