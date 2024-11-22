@@ -20,8 +20,8 @@ def initiate_payment(first_name,last_name,email,phone_number,amount,description,
         "last_name": last_name,
         "phone_number": phone_number,
         "tx_ref": tx_ref,  
-        "callback_url": "",
-        "return_url": "",
+        "callback_url": "https://yoni-guest-house-django-backend.vercel.app/rooms/pay",
+        "return_url": "https://www.yoniguesthouse.top",
         "customization": {
             "title": "Yoni Guest House",
             "description": description
