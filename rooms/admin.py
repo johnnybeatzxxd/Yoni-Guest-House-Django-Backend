@@ -13,8 +13,11 @@ class CompletedReservationFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         return (
+            ('confirmed', 'Confirmed'),
+            ('pending', 'Pending'),
             ('ongoing', 'Ongoing'),
             ('completed', 'Completed'),
+            
         )
 
     def queryset(self, request, queryset):
@@ -25,6 +28,10 @@ class CompletedReservationFilter(admin.SimpleListFilter):
             return queryset.filter(check_out_date__gt=today)
         elif self.value() == 'completed':
             return queryset.filter(check_out_date__lt=tomorrow)
+        elif self.value() == 'confirmed':
+            return queryset.filter(status="confirmed",check_out_date__gt=today)
+        elif self.value() == 'pending':
+                    return queryset.filter(status="pending",check_out_date__gt=today)
 
 class RoomsAdmin(admin.ModelAdmin):
     list_display = ["formatted_room_num", "type", "is_ready", "price"]
