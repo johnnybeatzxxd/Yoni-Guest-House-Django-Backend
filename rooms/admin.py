@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
 from django import forms
-from datetime import date
+from datetime import date, timedelta
 from .models import Rooms, Reservation, TransactionLogs
 
 
@@ -19,10 +19,12 @@ class CompletedReservationFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         today = timezone.now().date()
+        tomorrow = date.today() + timedelta(days=1)
+        
         if self.value() == 'ongoing':
-            return queryset.filter(check_out_date__gte=today)
+            return queryset.filter(check_out_date__gt=today)
         elif self.value() == 'completed':
-            return queryset.filter(check_out_date__lt=today)
+            return queryset.filter(check_out_date__lt=tomorrow)
 
 class RoomsAdmin(admin.ModelAdmin):
     list_display = ["formatted_room_num", "type", "is_ready", "price"]
@@ -32,8 +34,6 @@ class RoomsAdmin(admin.ModelAdmin):
         return f"Room {obj.room_num}"
     formatted_room_num.short_description = 'Room Number'
 
-from django import forms
-from .models import Reservation
 
 class ReservationForm(forms.ModelForm):
     class Meta:
