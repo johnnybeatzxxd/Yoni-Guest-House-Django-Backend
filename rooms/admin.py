@@ -90,14 +90,15 @@ class ReservationForm(forms.ModelForm):
             original_check_in_date = self.instance.check_in_date
             original_check_out_date = self.instance.check_out_date
             # check if the date is changed if changed check for the room availability
-            
-            if check_in_date != original_check_in_date or check_out_date != original_check_out_date:
-                print("checking the availability")
-                if room and not room.is_available_for_dates(check_in_date, check_out_date, exclude_reservation=self.instance):
-                    raise forms.ValidationError(
-                        f"The room {room.room_num} is not available from {check_in_date} to {check_out_date}."
-                    )
-                
+            if status != "cancelled":
+                if check_in_date != original_check_in_date or check_out_date != original_check_out_date:
+                    print("checking the availability")
+                    if room and not room.is_available_for_dates(check_in_date, check_out_date, exclude_reservation=self.instance):
+                        raise forms.ValidationError(
+                            f"The room {room.room_num} is not available from {check_in_date} to {check_out_date}."
+                        )
+        if status == "cancelled":
+            is_form_valid = True     
         if not is_form_valid:
             raise forms.ValidationError("The form is invalid.")
             
